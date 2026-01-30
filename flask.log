@@ -1,0 +1,37 @@
+python.exe : C:\Users\KiTE\Downloads\think 1.1
+\venom_1.1\venv\Lib\site-packages\pydub\utils.
+py:170: RuntimeWarning: Couldn't find ffmpeg 
+or avconv - defaulting to ffmpeg, but may not 
+work
+At line:1 char:62
++ ... enom_1.1" ; & 
+"C:\Users\KiTE\Downloads\think 
+1.1\venom_1.1\venv\Scrip ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( 
+   C:\Users\KiTE\D...ut may not work:String)  
+   [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandEr 
+   ror
+ 
+  warn("Couldn't find ffmpeg or avconv - 
+defaulting to ffmpeg, but may not work", 
+RuntimeWarning)
+Traceback (most recent call last):
+  File "C:\Users\KiTE\Downloads\think 
+1.1\venom_1.1\app.py", line 145, in <module>
+    print("\U0001f525 Infini Think API Server 
+starting on http://localhost:5000...")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File 
+"C:\Python314\Lib\encodings\cp1252.py", line 
+19, in encode
+    return codecs.charmap_encode(input,self.er
+rors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't 
+encode character '\U0001f525' in position 0: 
+character maps to <undefined>

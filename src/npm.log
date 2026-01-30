@@ -1,0 +1,41 @@
+
+> venom-ui@0.1.0 start
+> react-scripts start
+
+node.exe : (node:10588) [DEP0176] DeprecationWarning: fs.F_OK is deprecated, 
+use fs.constants.F_OK instead
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ((node:10588) [D...ts.F_OK inste 
+   ad:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:10588) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] 
+DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please 
+use the 'setupMiddlewares' option.
+(node:10588) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] 
+DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please 
+use the 'setupMiddlewares' option.
+Starting the development server...
+
+Failed to compile.
+
+[eslint] 
+src\App.js
+  Line 23:9:  'setHistory' is not defined  no-undef
+
+Search for the keywords to learn more about each error.
+[1m[31mERROR[39m[22m in [1m[eslint] 
+src\App.js
+  Line 23:9:  'setHistory' is not defined  no-undef
+
+Search for the keywords to learn more about each [1m[31merror[39m[22m[1m.[39m[22m
+
+webpack compiled with [1m[31m1 error[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
+(node:10588) [DEP0060] DeprecationWarning: The `util._extend` API is 
+deprecated. Please use Object.assign() instead.

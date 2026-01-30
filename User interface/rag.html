@@ -1,0 +1,682 @@
+ html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infini Think</title>
+    <link rel="icon" href="star2.png"/>
+    <style>
+        /* --- CSS VARIABLES & THEME --- */
+        :root {
+            --primary-color: #6c5ce7;
+            --secondary-color: #a29bfe;
+            --accent-color: #00cec9;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-white: #ffffff;
+            --text-muted: #dfe6e9;
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+
+        body {
+            font-family: var(--font-main);
+            height: 100vh;
+            overflow: hidden;
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+            color: var(--text-white);
+            position: relative;
+            transition: background 0.5s ease;
+        }
+
+        /* --- THE BLINKING STAR PARADOX BACKGROUND --- */
+        #star-container {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .star {
+            position: absolute;
+            border-radius: 50%;
+            animation: twinkle var(--duration) ease-in-out infinite;
+            opacity: 0;
+            transform-origin: center;
+            will-change: transform, opacity, box-shadow;
+            /* subtle base glow that can be overridden per-star */
+            filter: drop-shadow(0 0 6px rgba(255,255,255,0.6));
+        }
+
+        @keyframes twinkle {
+            0% { transform: scale(0.6); opacity: 0; box-shadow: 0 0 0 transparent; }
+            30% { transform: scale(1.0); opacity: 0.35; }
+            60% { transform: scale(1.4); opacity: 0.95; box-shadow: 0 0 14px rgba(255,255,255,0.95); }
+            100% { transform: scale(0.6); opacity: 0; box-shadow: 0 0 0 transparent; }
+        }
+
+        /* --- MAIN LAYOUT (1:3 RATIO) --- */
+        .app-container {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            height: 100vh;
+            backdrop-filter: blur(5px);
+        }
+
+        /* --- SIDEBAR (COLUMN 1) --- */
+        aside {
+            flex: 1; /* 1 Part */
+            background: rgba(0, 0, 0, 0.3);
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 15px;
+            max-width: 300px;
+        }
+
+        .brand-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+        }
+        .brand-btn:hover { transform: translateY(-2px); }
+        .brand-btn.jolly { background: linear-gradient(135deg, #ff9ff3, #f368e0); }
+        .brand-btn.secondary { background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); }
+
+        .history-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .history-item {
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            transition: background 0.2s;
+        }
+        .history-item:hover { background: rgba(255,255,255,0.1); color: white; }
+
+        /* --- CHAT AREA (COLUMN 2) --- */
+        main {
+            flex: 3; /* 3 Parts */
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* HEADER */
+        header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--glass-border);
+            background: rgba(0,0,0,0.2);
+        }
+
+        .ai-identity {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .identity-star {
+            color: #ffd700;
+            animation: pulseStar 1s infinite alternate;
+        }
+
+        @keyframes pulseStar { from { opacity: 0.5; transform: scale(0.8); } to { opacity: 1; transform: scale(1.2); } }
+
+        .settings-btn {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* SETTINGS DROPDOWN */
+        #settings-panel {
+            position: absolute;
+            top: 70px;
+            right: 20px;
+            background: rgba(10, 10, 15, 0.98); /* more opaque to prevent underlying content showing through */
+            border: 1px solid rgba(255,255,255,0.06);
+            padding: 15px;
+            border-radius: 12px;
+            width: 260px;
+            display: none; /* Hidden by default */
+            box-shadow: 0 12px 40px rgba(0,0,0,0.75);
+            z-index: 1002; /* place above the main app content */
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        #settings-panel h4 { margin-bottom: 10px; color: var(--accent-color); }
+        .theme-option {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            text-align: left;
+        }
+
+        /* MESSAGES */
+        .chat-feed {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 15px;
+            border-radius: 18px;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+            line-height: 1.5;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: var(--primary-color);
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.ai {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--glass-border);
+            border-bottom-left-radius: 4px;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* MESSAGE ACTIONS (Edit/Share) */
+        .msg-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+            opacity: 0.7;
+        }
+        .action-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 0.75rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .action-btn:hover { color: var(--accent-color); text-decoration: underline; }
+
+        /* INPUT AREA */
+        .input-wrapper {
+            padding: 20px;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .input-bar {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            padding: 5px 15px;
+            transition: box-shadow 0.3s;
+        }
+        
+        .input-bar:focus-within { box-shadow: 0 0 15px var(--primary-color); }
+
+        .input-field {
+            flex-grow: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 15px;
+            font-size: 1rem;
+        }
+        .input-field::placeholder { color: rgba(255,255,255,0.5); }
+
+        .icon-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 10px;
+            transition: color 0.2s;
+        }
+        .icon-btn:hover { color: var(--accent-color); }
+        
+        .send-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .send-btn:hover { background: var(--secondary-color); }
+
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <div id="star-container"></div>
+
+    <div class="app-container">
+        <aside>
+            <button class="brand-btn" onclick="newChat()">
+                <i class="fas fa-plus"></i> New Chat
+            </button>
+            <button class="brand-btn secondary">
+                <i class="fas fa-folder-open"></i> New Project
+            </button>
+            <button class="brand-btn jolly" onclick="triggerJollyMode()">
+                <i class="fas fa-laugh-beam"></i> Jolly AI
+            </button>
+
+            <div style="margin-top:10px; font-size:0.8rem; color:var(--accent-color); font-weight:bold;">PREVIOUS CHATS</div>
+            <div class="history-list" id="historyList">
+                <!-- dynamic history items will be rendered here -->
+            </div>
+        </aside>
+
+        <main>
+            <header>
+                <div class="ai-identity">
+                    <span class="identity-star">★</span> Infini Think
+                </div>
+                <button class="settings-btn" onclick="toggleSettings()">
+                    <i class="fas fa-cog"></i> Settings
+                </button>
+                
+                <div id="settings-panel">
+                    <h4>Appearance</h4>
+
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <button class="theme-option" onclick="changeBg('galaxy')">🌌 Galaxy Deep</button>
+                        <button class="theme-option" onclick="changeBg('sunset')">🌅 Cosmic Sunset</button>
+                        <button class="theme-option" onclick="changeBg('matrix')">💻 Digital Matrix</button>
+                    </div>
+
+                    <hr style="margin:10px 0; border-color: rgba(255,255,255,0.06)">
+
+                    <label style="display:block; margin-bottom:8px; font-size:0.9rem; color:var(--text-muted)">Background Color
+                        <input id="bgColorPicker" type="color" value="#090a0f" style="margin-left:8px; vertical-align:middle">
+                    </label>
+
+                    <label style="display:block; margin-bottom:8px; font-size:0.9rem; color:var(--text-muted)">Background Image
+                        <input id="bgImageInput" type="file" accept="image/*" style="margin-left:8px; vertical-align:middle">
+                    </label>
+
+                    <label style="display:block; margin-top:6px; font-size:0.9rem; color:var(--text-muted)">
+                        <input id="starsToggle" type="checkbox" checked style="margin-right:8px; vertical-align:middle"> Show Stars
+                    </label>
+
+                    <div style="margin-top:10px; display:flex; gap:8px;">
+                        <button class="theme-option" onclick="resetBackground()">♻️ Reset</button>
+                        <button class="theme-option" onclick="saveBackground()">💾 Save</button>
+                    </div>
+                </div>
+            </header>
+
+            <div class="chat-feed" id="chatFeed">
+                <div class="message ai">
+                    <p>Hello! I am <strong>Infini Think</strong>. I am currently operating in the Blinking Star Paradox mode. How can I help you today?</p>
+                    <div class="msg-actions">
+                        <button class="action-btn"><i class="fas fa-pen"></i> Edit</button>
+                        <button class="action-btn"><i class="fas fa-share-alt"></i> Share</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-wrapper">
+                <div class="input-bar">
+                    <input type="text" class="input-field" placeholder="Ask Infini Think..." id="userInput" onkeypress="handleEnter(event)">
+                    
+                    <button class="icon-btn" title="Send Document"><i class="fas fa-paperclip"></i></button>
+                    <button class="icon-btn" title="Open Camera"><i class="fas fa-camera"></i></button>
+                    
+                    <button class="send-btn" onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        /* --- 1. GENERATE STAR PARADOX BACKGROUND --- */
+        const starContainer = document.getElementById('star-container');
+        const starCount = 150;
+
+        // cheerful palette: soft warm/cool tints
+        const starPalette = ['#ffffff', '#fff7d6', '#ffd6e8', '#d6f0ff', '#fff1b8'];
+
+        for (let i = 0; i < starCount; i++) {
+            const star = document.createElement('div');
+            star.classList.add('star');
+
+            // Random positioning
+            const x = Math.random() * 100;
+            const y = Math.random() * 100;
+
+            // Random Size (a bit larger so stars read brighter)
+            const size = Math.random() * 3 + 0.8; // 0.8px - 3.8px
+
+            // Random Animation Duration (The "Paradox" chaotic feel)
+            const duration = Math.random() * 3 + 1; // between 1s and 4s
+            const delay = Math.random() * 5;
+
+            // pick a soft color and make a small radial highlight
+            const color = starPalette[Math.floor(Math.random() * starPalette.length)];
+            star.style.left = `${x}%`;
+            star.style.top = `${y}%`;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.borderRadius = '50%';
+            star.style.setProperty('--duration', `${duration}s`);
+            star.style.animationDelay = `${delay}s`;
+
+            // use a tiny radial gradient so edges are soft and center is bright
+            star.style.background = `radial-gradient(circle at 30% 30%, ${color} 0%, rgba(255,255,255,0.9) 40%, rgba(255,255,255,0.08) 100%)`;
+            // make the glow proportionate to size
+            const glow = Math.max(6, size * 5);
+            star.style.boxShadow = `0 0 ${glow}px ${color}`;
+
+            starContainer.appendChild(star);
+        }
+
+        /* --- 2. SETTINGS LOGIC --- */
+        function toggleSettings() {
+            const panel = document.getElementById('settings-panel');
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Apply a background object: { kind: 'preset'|'color'|'image', value: string }
+        function applyBackground(bg, save = true) {
+            if (!bg) return;
+            if (bg.kind === 'preset') {
+                if (bg.value === 'galaxy') {
+                    document.body.style.background = "radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%)";
+                } else if (bg.value === 'sunset') {
+                    document.body.style.background = "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)";
+                } else if (bg.value === 'matrix') {
+                    document.body.style.background = "linear-gradient(to bottom, #000000, #0f9b0f)";
+                }
+            } else if (bg.kind === 'color') {
+                document.body.style.background = bg.value;
+            } else if (bg.kind === 'image') {
+                document.body.style.background = `url(${bg.value}) center/cover no-repeat`;
+            }
+
+            if (save) localStorage.setItem('infini_bg', JSON.stringify(bg));
+        }
+
+        function changeBg(type) {
+            applyBackground({ kind: 'preset', value: type });
+            toggleSettings();
+        }
+
+        function saveBackground() {
+            const stored = localStorage.getItem('infini_bg');
+            if (stored) alert('Background saved.');
+            else alert('No background to save. Apply a background first.');
+        }
+
+        function resetBackground() {
+            localStorage.removeItem('infini_bg');
+            localStorage.removeItem('infini_stars');
+            document.getElementById('bgColorPicker').value = '#090a0f';
+            document.getElementById('bgImageInput').value = null;
+            document.getElementById('starsToggle').checked = true;
+            document.getElementById('star-container').style.display = 'block';
+            applyBackground({ kind: 'preset', value: 'galaxy' }, false);
+            toggleSettings();
+        }
+
+            // Initialize controls and restore saved preferences
+        document.addEventListener('DOMContentLoaded', () => {
+            const colorPicker = document.getElementById('bgColorPicker');
+            const imageInput = document.getElementById('bgImageInput');
+            const starsToggle = document.getElementById('starsToggle');
+
+            // Restore saved background
+            const saved = localStorage.getItem('infini_bg');
+            if (saved) {
+                try {
+                    const bg = JSON.parse(saved);
+                    applyBackground(bg, false);
+                    if (bg.kind === 'color' && colorPicker) colorPicker.value = bg.value;
+                } catch (e) {
+                    console.error('Failed to parse saved background', e);
+                }
+            }
+
+            // Restore star visibility
+            const starsSaved = localStorage.getItem('infini_stars');
+            if (starsSaved === 'false') {
+                document.getElementById('star-container').style.display = 'none';
+                if (starsToggle) starsToggle.checked = false;
+            }
+
+            // Color picker live preview
+            if (colorPicker) {
+                colorPicker.addEventListener('input', (e) => {
+                    applyBackground({ kind: 'color', value: e.target.value });
+                });
+                colorPicker.addEventListener('change', (e) => {
+                    applyBackground({ kind: 'color', value: e.target.value });
+                });
+            }
+
+            // Image upload
+            if (imageInput) {
+                imageInput.addEventListener('change', (e) => {
+                    const file = e.target.files && e.target.files[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        applyBackground({ kind: 'image', value: reader.result });
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            // Stars toggle
+            if (starsToggle) {
+                starsToggle.addEventListener('change', (e) => {
+                    document.getElementById('star-container').style.display = e.target.checked ? 'block' : 'none';
+                    localStorage.setItem('infini_stars', e.target.checked);
+                });
+            }
+
+            // Close settings when clicking outside
+            document.addEventListener('click', (e) => {
+                const panel = document.getElementById('settings-panel');
+                const btn = document.querySelector('.settings-btn');
+                if (!panel || !btn) return;
+                if (!panel.contains(e.target) && !btn.contains(e.target) && !e.target.closest('#settings-panel')) {
+                    panel.style.display = 'none';
+                }
+            });
+
+            // Render saved chat history
+            renderHistoryList();
+        });
+
+        function triggerJollyMode() {
+            alert("✨ Jolly Mode Activated! Adding confetti to your thinking process...");
+            // You could add confetti logic here
+        }
+
+        /* --- 3. CHAT LOGIC --- */
+        function handleEnter(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const text = input.value;
+            if (!text) return;
+
+            addMessage('user', text);
+            input.value = '';
+
+            // Simulate AI reply
+            setTimeout(() => {
+                addMessage('ai', "I am processing your request through the infinite paradox...");
+            }, 1000);
+        }
+
+        function addMessage(sender, text) {
+            const chatFeed = document.getElementById('chatFeed');
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('message', sender);
+            
+            msgDiv.innerHTML = `
+                <p>${text}</p>
+                <div class="msg-actions">
+                    <button class="action-btn"><i class="fas fa-pen"></i> Edit</button>
+                    <button class="action-btn"><i class="fas fa-share-alt"></i> Share</button>
+                </div>
+            `;
+            
+            chatFeed.appendChild(msgDiv);
+            chatFeed.scrollTop = chatFeed.scrollHeight;
+        }
+
+        // Append a message using stored text (used when restoring sessions)
+        function addMessageRaw(sender, htmlText) {
+            const chatFeed = document.getElementById('chatFeed');
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('message', sender);
+            msgDiv.innerHTML = `
+                <p>${htmlText}</p>
+                <div class="msg-actions">
+                    <button class="action-btn"><i class="fas fa-pen"></i> Edit</button>
+                    <button class="action-btn"><i class="fas fa-share-alt"></i> Share</button>
+                </div>
+            `;
+            chatFeed.appendChild(msgDiv);
+        }
+
+        // --- Chat session history management ---
+        function getSessions() {
+            try {
+                return JSON.parse(localStorage.getItem('infini_chats') || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveSessions(sessions) {
+            localStorage.setItem('infini_chats', JSON.stringify(sessions));
+        }
+
+        function saveCurrentChatToHistory() {
+            const chatFeed = document.getElementById('chatFeed');
+            const messages = [];
+            chatFeed.querySelectorAll('.message').forEach(m => {
+                const sender = m.classList.contains('user') ? 'user' : 'ai';
+                const text = (m.querySelector('p') && m.querySelector('p').innerText) || '';
+                messages.push({ sender, text });
+            });
+
+            // Don't save empty chats
+            if (messages.length === 0) return null;
+
+            // Create a title: prefer first user message, fallback to first message, then timestamp
+            let title = null;
+            for (const msg of messages) {
+                if (msg.sender === 'user' && msg.text.trim()) { title = msg.text.trim(); break; }
+            }
+            if (!title) title = messages[0].text.slice(0, 40) || `Chat ${new Date().toLocaleString()}`;
+
+            const sessions = getSessions();
+            const session = {
+                id: Date.now(),
+                title,
+                createdAt: new Date().toISOString(),
+                messages
+            };
+            sessions.unshift(session); // newest first
+            saveSessions(sessions);
+            renderHistoryList();
+            return session;
+        }
+
+        function renderHistoryList() {
+            const list = document.getElementById('historyList');
+            if (!list) return;
+            const sessions = getSessions();
+            list.innerHTML = '';
+            sessions.forEach(s => {
+                const el = document.createElement('div');
+                el.className = 'history-item';
+                el.title = new Date(s.createdAt).toLocaleString();
+                el.innerText = s.title.length > 40 ? s.title.slice(0, 37) + '...' : s.title;
+                el.onclick = () => loadSession(s.id);
+                list.appendChild(el);
+            });
+        }
+
+        function loadSession(id) {
+            const sessions = getSessions();
+            const session = sessions.find(s => s.id === id);
+            if (!session) return;
+            const chatFeed = document.getElementById('chatFeed');
+            chatFeed.innerHTML = '';
+            session.messages.forEach(m => addMessageRaw(m.sender, m.text));
+            chatFeed.scrollTop = chatFeed.scrollHeight;
+            // close settings if open
+            const panel = document.getElementById('settings-panel'); if (panel) panel.style.display = 'none';
+        }
+
+        function newChat() {
+            // save current chat if it has content
+            saveCurrentChatToHistory();
+            const chatFeed = document.getElementById('chatFeed');
+            chatFeed.innerHTML = '';
+            // add initial AI greeting
+            addMessage('ai', 'Hello! I am Infini Think. I am ready for a new task.');
+            chatFeed.scrollTop = chatFeed.scrollHeight;
+        }
+    </script>
+</body>
+</html>
