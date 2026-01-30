@@ -28,7 +28,8 @@ Module B: Defensive Data Integrity (ML Focus)
 Honey-Prompt Trap (Scraper Sabotage): A specialized Generative AI defense that detects bot-scrapers and serves them "hallucination bait." It generates highly realistic but subtly flawed data (e.g., incorrect financial dates) to corrupt the scraper's database and tag the stolen data for copyright enforcement.
 
 Module C: Cognitive Augmentation (Productivity Focus)
-Perspective Swapper: A Cross-Domain Translation engine that re-maps the underlying logic of a text. It uses LoRA-tuned models to explain complex technical or legal data through analogies specific to the user’s background (e.g., explaining medicine through engineering metaphors).
+Perspective Swapper: A Cross-Domain Translation engine that re-maps the underlying logic of a text. It uses LoRA-tuned models to explain complex technical or legal data through analogies specific to the user’s background 
+(e.g., explaining medicine through engineering metaphors).
 
 Visual Architect: A Multimodal Vision tool that parses hand-drawn sketches and whiteboards into structured JSON logic, automatically generating Trello boards, project manifests, or boilerplate code.
 
