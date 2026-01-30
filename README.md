@@ -4,11 +4,11 @@ Domain: Cybersecurity and Machine Learning
 
 Vision: Restoring data sovereignty through proactive AI counter-intelligence.
 
-1. Executive Summary
+1. Executive Summary.
 INFINI THNIK is a decentralized, local-first AI security suite designed to combat the rising threats of synthetic identity theft, behavioral tracking, and industrial data scraping in the 2026 digital landscape. Unlike reactive security tools that rely on firewalls, INFINI THNIK uses Adversarial Machine Learning to proactively "poison" the data trail left by users, making them invisible to surveillance algorithms while boosting their cognitive productivity through advanced logic-mapping.
 
-2. Problem Statement
-In 2026, cybersecurity threats have shifted from simple malware to Autonomous AI Attackers. Traditional defenses are failing because:
+2. Problem Statement.
+In 2026, cybersecurity threats have shifted from simple malware to Autonomous AI Attackers. .Traditional defenses are failing because:
 
 AI-Generated Deepfakes can bypass biometric voice and video locks.
 
@@ -16,7 +16,7 @@ Behavioral Fingerprinting allows trackers to identify users by their unique typi
 
 Aggressive Web Scrapers harvest proprietary data to train competitor models without consent.
 
-3. Detailed Feature Specifications
+ Detailed Feature Specifications
 Module A: Identity & Privacy Shield (Cybersecurity Focus)
 Persona Mirage (Identity Decoy): Uses Agentic LLMs to simulate realistic, human-logical browsing patterns. It generates decoy traffic that creates "ghost personas," diluting the user's actual data profile for trackers.
 
