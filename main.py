@@ -49,7 +49,6 @@ class MainScreen(Screen):
             self.output.text = f"Venom: {reply}"
         else:
             self.output.text = "Venom: Dei... sollu da onna?"
-
 class VenomApp(MDApp):
     def build(self):
         self.theme_cls.primary_palette = "Purple"
