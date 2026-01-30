@@ -9,8 +9,8 @@ from datetime import datetime
 import asyncio
 import tempfile
 import edge_tts
-from pydub import AudioSegment
-from pydub.playback import play
+# from pydub import AudioSegment
+# from pydub.playback import play
 
 app = Flask(__name__)
 CORS(app)
