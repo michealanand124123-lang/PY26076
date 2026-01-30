@@ -10,7 +10,6 @@ import venom_backend  # Ensure this exists
 
 # Optional window size for testing on PC
 Window.size = (400, 600)
-
 class MainScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
